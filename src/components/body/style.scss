@@ -23,6 +23,7 @@
     display: none;
   }
   input[type="file"] + label {
+    cursor: pointer;
     display: inline-block;
     margin-top: 2rem;
     border-radius: 5px;
@@ -30,5 +31,36 @@
     color: white;
     padding: 5px 10px;
     font-weight: 600;
+  }
+  >section{
+    >h3{
+      text-transform: capitalize;
+      background-color: #c471ed,;
+      color: white;
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-top: 2rem;
+      font-size: 2rem;
+    }
+    >button{
+      display: block;
+      margin-block:15px ;
+      border: none;
+      background-color: dodgerblue;
+      color: white;
+      padding: 5px 10px;
+      font-size: large;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  }
+  .remove-section{
+    >h3{
+      background-color: darkcyan;
+    }
+    >button{
+      background-color: #f64f59;
+    }
   }
 }
