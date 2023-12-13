@@ -1,0 +1,34 @@
+.body {
+  margin-inline: 4rem;
+  > ul {
+    margin-top: 2rem;
+    border-radius: 5px;
+    background-color: #f64fc4ca;
+    padding: 1rem 2rem;
+    color: white;
+    > li {
+      padding-left: 2rem;
+      list-style-position: inside;
+      text-transform: capitalize;
+      padding-bottom: 0.4rem;
+    }
+    > h2 {
+      letter-spacing: 2px;
+      padding-bottom: 1rem;
+      text-decoration: underline #12c2e9be;
+      text-underline-offset: 7px;
+    }
+  }
+  input[type="file"] {
+    display: none;
+  }
+  input[type="file"] + label {
+    display: inline-block;
+    margin-top: 2rem;
+    border-radius: 5px;
+    background-color: dodgerblue;
+    color: white;
+    padding: 5px 10px;
+    font-weight: 600;
+  }
+}
