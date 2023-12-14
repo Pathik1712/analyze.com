@@ -1,5 +1,6 @@
 .body {
   margin-inline: 4rem;
+  padding-bottom: 4rem;
   > ul {
     margin-top: 2rem;
     border-radius: 5px;
@@ -32,10 +33,10 @@
     padding: 5px 10px;
     font-weight: 600;
   }
-  >section{
-    >h3{
+  .Title {
+    > h3 {
       text-transform: capitalize;
-      background-color: #c471ed,;
+      background-color: #c471ed;
       color: white;
       display: inline-block;
       padding: 10px 20px;
@@ -43,9 +44,10 @@
       margin-top: 2rem;
       font-size: 2rem;
     }
-    >button{
+    > span {
       display: block;
-      margin-block:15px ;
+      width: fit-content;
+      margin-block: 15px;
       border: none;
       background-color: dodgerblue;
       color: white;
@@ -55,12 +57,49 @@
       cursor: pointer;
     }
   }
-  .remove-section{
-    >h3{
+  .select-graph {
+    background: #f64f59;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    font-size: large;
+    > option {
       background-color: darkcyan;
+      border-radius: inherit;
+      border: none;
     }
-    >button{
-      background-color: #f64f59;
+  }
+}
+
+.bar-graph-div {
+  margin-top: 2rem;
+  > section {
+    margin-block: 2rem;
+    h4 {
+      text-transform: capitalize;
+      width: fit-content;
+      color: white;
+      border-radius: 5px;
+      background-color: deepskyblue;
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-top: 2rem;
+      font-size: 1.5rem;
+    }
+    > select {
+      margin-top: 1rem;
+      border: none;
+      outline: none;
+      background-color: #f64fc4ca;
+      color: white;
+      padding: 5px 10px;
+      font-size: large;
+      border-radius: 5px;
+      >option{
+        background-color: darkcyan;
+      }
     }
   }
 }

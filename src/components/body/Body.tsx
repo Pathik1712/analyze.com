@@ -2,18 +2,10 @@ import React, { useCallback, useId, useState } from "react"
 import "./style.scss"
 import papa from "papaparse"
 import toast from "react-hot-toast"
-import { Bar } from "react-chartjs-2"
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js"
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+import BarComponent from "../bar/Bar"
+
+type Graph = "Bar" | "pie" | ""
 
 const Body = () => {
   const id = useId()
@@ -21,7 +13,7 @@ const Body = () => {
   const [file, setFile] = useState("")
   const [data, setData] = useState<object[]>([])
   const [header, setHearder] = useState<string[]>([])
-  const [selectedData, set_selectedData] = useState<string[]>([])
+  const [barType, set_barType] = useState<Graph>("")
 
   const handleChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,22 +41,6 @@ const Body = () => {
     []
   )
 
-  const handleTitleSelect = useCallback(
-    (name: string) => {
-      setHearder(header.filter((i) => i !== name))
-      set_selectedData([...selectedData, name])
-    },
-    [header, selectedData]
-  )
-
-  const handleRemove = useCallback(
-    (name: string) => {
-      set_selectedData(selectedData.filter((i) => i !== name))
-      setHearder([...header, name])
-    },
-    [header, selectedData]
-  )
-
   return (
     <div className="body">
       <ul>
@@ -90,50 +66,37 @@ const Body = () => {
       />
       <label htmlFor={id}>Select File 📂</label>
       {data.length !== 0 && (
-        <section>
-          <h3>choose title:</h3>
-          {header.map((i, num) => (
-            <button
-              key={`select-title-${num}`}
-              onClick={() => handleTitleSelect(i)}
+        <>
+          <section className="Title">
+            <h3>Titles:</h3>
+            {header.map((i, num) => (
+              <span key={`select-title-${num}`}>{i}</span>
+            ))}
+          </section>
+          <select
+          className="select-graph"
+            defaultValue={""}
+            onChange={(e) => set_barType(e.target.value as Graph)}
+          >
+            <option
+              value=""
+              hidden
+              disabled
             >
-              {i} +
-            </button>
-          ))}
-        </section>
-      )}
-      {selectedData.length != 0 && (
-        <section className="remove-section">
-          <h3>selected title:</h3>
-          {selectedData.map((i, num) => (
-            <button
-              key={`remove-title.${num}`}
-              onClick={() => {
-                handleRemove(i)
-              }}
-            >
-              {i} -
-            </button>
-          ))}
-        </section>
+              --Select Graph Type--
+            </option>
+            <option value="Bar">Bar</option>
+          </select>
+        </>
       )}
 
-      {selectedData.length >= 2 && (
-        <Bar
-          data={{
-            labels: data.map(
-              (i) => (i as Record<string, unknown>)[selectedData[0]]
-            ),
-            datasets: [
-              {
-                data: data.map(
-                  (i) => (i as Record<string, unknown>)[selectedData[1]]
-                ),
-                backgroundColor: "red",
-              },
-            ],
-          }}
+      {barType === "Bar" ? (
+        <BarComponent
+          data={data}
+          headerList={header}
         />
+      ) : (
+        ""
       )}
     </div>
   )
