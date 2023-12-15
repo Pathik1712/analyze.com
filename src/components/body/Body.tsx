@@ -4,8 +4,10 @@ import papa from "papaparse"
 import toast from "react-hot-toast"
 
 import BarComponent from "../bar/Bar"
+import LineComponent from "../line/Line"
+import PolarChart from "../polar/PolarChart"
 
-type Graph = "Bar" | "pie" | ""
+type Graph = "Bar" | "pie" | "Line" | "Polar" | ""
 
 const Body = () => {
   const id = useId()
@@ -14,6 +16,14 @@ const Body = () => {
   const [data, setData] = useState<object[]>([])
   const [header, setHearder] = useState<string[]>([])
   const [barType, set_barType] = useState<Graph>("")
+
+  const color = [
+    "rgb(255, 99, 132)",
+    "rgb(75, 192, 192)",
+    "rgb(255, 205, 86)",
+    "rgb(201, 203, 207)",
+    "rgb(54, 162, 235)",
+  ]
 
   const handleChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +84,7 @@ const Body = () => {
             ))}
           </section>
           <select
-          className="select-graph"
+            className="select-graph"
             defaultValue={""}
             onChange={(e) => set_barType(e.target.value as Graph)}
           >
@@ -86,12 +96,27 @@ const Body = () => {
               --Select Graph Type--
             </option>
             <option value="Bar">Bar</option>
+            <option value="Line">Line</option>
+            <option value="Polar">Polar</option>
           </select>
         </>
       )}
 
       {barType === "Bar" ? (
         <BarComponent
+          color={color}
+          data={data}
+          headerList={header}
+        />
+      ) : barType === "Line" ? (
+        <LineComponent
+          color={color}
+          data={data}
+          headerList={header}
+        />
+      ) : barType === "Polar" ? (
+        <PolarChart
+          color={color}
           data={data}
           headerList={header}
         />

@@ -1,17 +1,16 @@
-import { Bar } from "react-chartjs-2"
+import React, { useState, useCallback } from "react"
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
   ChartDataset,
 } from "chart.js"
-import React, { useCallback, useState } from "react"
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+import { Line } from "react-chartjs-2"
 
 type Props = {
   headerList: string[]
@@ -19,7 +18,17 @@ type Props = {
   color: string[]
 }
 
-const BarComponent = ({ headerList, data, color }: Props) => {
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+)
+
+const LineComponent = ({ data, headerList, color }: Props) => {
   const [xLabel, set_xLabel] = useState<unknown[]>([])
 
   const [dataGroup, set_dataGroup] = useState<object>({})
@@ -35,7 +44,8 @@ const BarComponent = ({ headerList, data, color }: Props) => {
         data: (dataGroup as Record<string, unknown[]>)[i],
         label: i,
         backgroundColor: color[num % color.length],
-      } as ChartDataset<"bar">)
+        borderColor: color[num % color.length],
+      } as ChartDataset<"line">)
   )
 
   const handleXlabel = useCallback(
@@ -77,7 +87,6 @@ const BarComponent = ({ headerList, data, color }: Props) => {
     },
     [data, dataGroup, label_name]
   )
-
   return (
     <div className="bar-graph-div">
       <section>
@@ -125,7 +134,7 @@ const BarComponent = ({ headerList, data, color }: Props) => {
       </section>
 
       {label_name.x !== "" && label_name.y.length !== 0 && (
-        <Bar
+        <Line
           className="graph-anm"
           data={{
             labels: xLabel,
@@ -137,4 +146,4 @@ const BarComponent = ({ headerList, data, color }: Props) => {
   )
 }
 
-export default BarComponent
+export default LineComponent

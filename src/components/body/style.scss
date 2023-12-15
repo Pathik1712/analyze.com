@@ -123,11 +123,23 @@
       }
     }
   }
-  > div {
-    width: 100%;
-    > canvas {
-      width: 100% !important;
-      height: auto !important;
+  > canvas {
+    width: 100% !important;
+    height: auto !important;
+    transform: translateX(-100%);
+  }
+}
+
+.graph-anm {
+  animation: anmForGraph 2s forwards  1;
+  @keyframes anmForGraph {
+    0% {
+      opacity: 0.2;
+      // transform: translateX(-100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 }
