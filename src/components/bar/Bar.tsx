@@ -9,7 +9,7 @@ import {
   Legend,
   ChartDataset,
 } from "chart.js"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useState, useEffect } from "react"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -77,6 +77,15 @@ const BarComponent = ({ headerList, data, color }: Props) => {
     },
     [data, dataGroup, label_name]
   )
+
+  useEffect(() => {
+    if (label_name.x !== "" && label_name.y.length) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      })
+    }
+  }, [label_name.x, label_name.y])
 
   return (
     <div className="bar-graph-div">

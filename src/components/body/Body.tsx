@@ -6,8 +6,10 @@ import toast from "react-hot-toast"
 import BarComponent from "../bar/Bar"
 import LineComponent from "../line/Line"
 import PolarChart from "../polar/PolarChart"
+import PieChart from "../pie/PieComponent"
+import img from "../../assets/Empty.jpg"
 
-type Graph = "Bar" | "pie" | "Line" | "Polar" | ""
+type Graph = "Bar" | "Pie" | "Line" | "Polar" | ""
 
 const Body = () => {
   const id = useId()
@@ -75,7 +77,8 @@ const Body = () => {
         multiple={false}
       />
       <label htmlFor={id}>Select File 📂</label>
-      {data.length !== 0 && (
+
+      {data.length !== 0 ? (
         <>
           <section className="Title">
             <h3>Titles:</h3>
@@ -98,8 +101,15 @@ const Body = () => {
             <option value="Bar">Bar</option>
             <option value="Line">Line</option>
             <option value="Polar">Polar</option>
+            <option value="Pie">Pie</option>
           </select>
         </>
+      ) : (
+        <img
+          src={img}
+          alt=""
+          className="Empty-Image"
+        />
       )}
 
       {barType === "Bar" ? (
@@ -116,6 +126,12 @@ const Body = () => {
         />
       ) : barType === "Polar" ? (
         <PolarChart
+          color={color}
+          data={data}
+          headerList={header}
+        />
+      ) : barType === "Pie" ? (
+        <PieChart
           color={color}
           data={data}
           headerList={header}

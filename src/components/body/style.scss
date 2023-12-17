@@ -131,7 +131,7 @@
 }
 
 .graph-anm {
-  animation: anmForGraph 2s forwards  1;
+  animation: anmForGraph 2s forwards 1;
   @keyframes anmForGraph {
     0% {
       opacity: 0.2;
@@ -142,4 +142,18 @@
       transform: translateX(0);
     }
   }
+}
+
+.polar-div {
+  > canvas {
+    max-width: 50rem;
+    margin-inline: auto;
+  }
+}
+
+.Empty-Image {
+  width: 100%;
+  max-width: 35rem;
+  display: block;
+  margin-inline: auto;
 }

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -87,6 +87,15 @@ const LineComponent = ({ data, headerList, color }: Props) => {
     },
     [data, dataGroup, label_name]
   )
+
+  useEffect(() => {
+    if (label_name.x !== "" && label_name.y.length) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      })
+    }
+  }, [label_name.x, label_name.y])
   return (
     <div className="bar-graph-div">
       <section>

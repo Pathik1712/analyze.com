@@ -6,7 +6,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js"
-import { PolarArea } from "react-chartjs-2"
+import { Pie } from "react-chartjs-2"
 
 type Props = {
   headerList: string[]
@@ -16,15 +16,18 @@ type Props = {
 
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend)
 
-const PolarChart = ({ color, data, headerList }: Props) => {
+const PieChart = ({ color, data, headerList }: Props) => {
   const [selectedHeaders, set_selectedHeaders] = useState("")
   const [info, set_info] = useState<number[]>([])
 
   const [label, set_label] = useState<string[]>([])
 
+  const [yLabel, setYlabel] = useState("")
+
   const handleLabel = useCallback(
     (_e: React.ChangeEvent<HTMLInputElement>, item: string) => {
       const obj: Record<string, number> = {}
+      setYlabel(item)
       const early_data = data.map((i) => (i as Record<string, unknown>)[item])
       if (typeof early_data[0] !== "number") {
         data.forEach((i) => {
@@ -138,7 +141,7 @@ const PolarChart = ({ color, data, headerList }: Props) => {
         )}
       </section>
       {selectedHeaders !== "" && info.length !== 0 && (
-        <PolarArea
+        <Pie
           className="graph-anm"
           data={{
             labels: label,
@@ -149,10 +152,21 @@ const PolarChart = ({ color, data, headerList }: Props) => {
               },
             ],
           }}
+          options={{
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label(tooltipItem) {
+                    return `Count of ${yLabel} in ${tooltipItem.label}:${tooltipItem.parsed}`
+                  },
+                },
+              },
+            },
+          }}
         />
       )}
     </div>
   )
 }
 
-export default PolarChart
+export default PieChart
