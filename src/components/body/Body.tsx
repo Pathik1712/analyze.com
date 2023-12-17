@@ -1,4 +1,4 @@
-import React, { useCallback, useId, useState } from "react"
+import React, { useCallback, useEffect, useId, useState } from "react"
 import "./style.scss"
 import papa from "papaparse"
 import toast from "react-hot-toast"
@@ -18,6 +18,7 @@ const Body = () => {
   const [data, setData] = useState<object[]>([])
   const [header, setHearder] = useState<string[]>([])
   const [barType, set_barType] = useState<Graph>("")
+  const [cleaning, set_cleaning] = useState(false)
 
   const color = [
     "rgb(255, 99, 132)",
@@ -43,15 +44,30 @@ const Body = () => {
           if (results.data.length === 0) {
             return toast.error("file is empty")
           }
-          console.log(results.data)
           const arr = Object.keys(results.data[0]!).map((key) => key)
           setHearder(arr)
           setData(results.data as object[])
+          set_cleaning(true)
         },
       })
     },
     []
   )
+
+  useEffect(() => {
+    if (cleaning === true) {
+      const load = toast.loading("Cleaning Data", {
+        style: {
+          backgroundColor: "rgba(0,0,0,0.6)",
+          color: "white",
+        },
+      })
+      const arr = data.filter((i) => Object.keys(i).length === header.length)
+      setData(arr)
+      set_cleaning(false)
+      toast.dismiss(load)
+    }
+  }, [cleaning, data, header.length])
 
   return (
     <div className="body">

@@ -9,7 +9,15 @@ import {
   Legend,
   ChartDataset,
 } from "chart.js"
-import React, { useCallback, useState, useEffect } from "react"
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useMemo,
+  useId,
+  useTransition,
+} from "react"
+import toast from "react-hot-toast"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -29,14 +37,20 @@ const BarComponent = ({ headerList, data, color }: Props) => {
     y: [] as string[],
   })
 
-  const arr = Object.keys(dataGroup).map(
-    (i, num) =>
-      ({
-        data: (dataGroup as Record<string, unknown[]>)[i],
-        label: i,
-        backgroundColor: color[num % color.length],
-      } as ChartDataset<"bar">)
-  )
+  const [isPending, startTransition] = useTransition()
+
+  const id = useId()
+
+  const arr = useMemo(() => {
+    return Object.keys(dataGroup).map(
+      (i, num) =>
+        ({
+          data: (dataGroup as Record<string, unknown[]>)[i],
+          label: i,
+          backgroundColor: color[num % color.length],
+        } as ChartDataset<"bar">)
+    )
+  }, [color, dataGroup])
 
   const handleXlabel = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -58,9 +72,11 @@ const BarComponent = ({ headerList, data, color }: Props) => {
           ...label_name,
           y: [...label_name.y, item],
         })
-        set_dataGroup({
-          ...dataGroup,
-          [item]: data.map((i) => (i as Record<string, unknown>)[item]),
+        startTransition(() => {
+          set_dataGroup({
+            ...dataGroup,
+            [item]: data.map((i) => (i as Record<string, unknown>)[item]),
+          })
         })
       } else {
         set_labelName({
@@ -70,22 +86,32 @@ const BarComponent = ({ headerList, data, color }: Props) => {
         const obj = {
           ...dataGroup,
         }
-        console.log(obj)
         delete (obj as Record<string, unknown>)[item]
-        set_dataGroup(obj)
+        startTransition(() => {
+          set_dataGroup(obj)
+        })
       }
     },
     [data, dataGroup, label_name]
   )
+  isPending
+    ? toast.loading("Loading...", {
+        style: {
+          backgroundColor: "rgba(0,0,0,0.6)",
+          color: "white",
+        },
+        id,
+      })
+    : toast.dismiss(id)
 
   useEffect(() => {
-    if (label_name.x !== "" && label_name.y.length) {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth",
-      })
-    }
-  }, [label_name.x, label_name.y])
+    isPending
+      ? ""
+      : window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        })
+  }, [isPending])
 
   return (
     <div className="bar-graph-div">
@@ -125,7 +151,9 @@ const BarComponent = ({ headerList, data, color }: Props) => {
                 <input
                   type="checkbox"
                   id={`bar-yAxes-id-${num}`}
-                  onChange={(e) => handleYlabel(e, i)}
+                  onChange={(e) => {
+                    handleYlabel(e, i)
+                  }}
                 />
                 <label htmlFor={`bar-yAxes-id-${num}`}>{i}</label>
               </div>
