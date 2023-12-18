@@ -1,4 +1,11 @@
-import React, { useState, useCallback, useEffect } from "react"
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useTransition,
+  useId,
+  useMemo,
+} from "react"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,6 +18,7 @@ import {
   ChartDataset,
 } from "chart.js"
 import { Line } from "react-chartjs-2"
+import toast from "react-hot-toast"
 
 type Props = {
   headerList: string[]
@@ -38,15 +46,21 @@ const LineComponent = ({ data, headerList, color }: Props) => {
     y: [] as string[],
   })
 
-  const arr = Object.keys(dataGroup).map(
-    (i, num) =>
-      ({
-        data: (dataGroup as Record<string, unknown[]>)[i],
-        label: i,
-        backgroundColor: color[num % color.length],
-        borderColor: color[num % color.length],
-      } as ChartDataset<"line">)
-  )
+  const id = useId()
+
+  const [isPending, startTransition] = useTransition()
+
+  const arr = useMemo(() => {
+    return Object.keys(dataGroup).map(
+      (i, num) =>
+        ({
+          data: (dataGroup as Record<string, unknown[]>)[i],
+          label: i,
+          backgroundColor: color[num % color.length],
+          borderColor: color[num % color.length],
+        } as ChartDataset<"line">)
+    )
+  }, [color, dataGroup])
 
   const handleXlabel = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -68,9 +82,11 @@ const LineComponent = ({ data, headerList, color }: Props) => {
           ...label_name,
           y: [...label_name.y, item],
         })
-        set_dataGroup({
-          ...dataGroup,
-          [item]: data.map((i) => (i as Record<string, unknown>)[item]),
+        startTransition(() => {
+          set_dataGroup({
+            ...dataGroup,
+            [item]: data.map((i) => (i as Record<string, unknown>)[item]),
+          })
         })
       } else {
         set_labelName({
@@ -80,22 +96,34 @@ const LineComponent = ({ data, headerList, color }: Props) => {
         const obj = {
           ...dataGroup,
         }
-        console.log(obj)
         delete (obj as Record<string, unknown>)[item]
-        set_dataGroup(obj)
+        startTransition(() => {
+          set_dataGroup(obj)
+        })
       }
     },
     [data, dataGroup, label_name]
   )
 
-  useEffect(() => {
-    if (label_name.x !== "" && label_name.y.length) {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth",
+  isPending
+    ? toast.loading("Loading...", {
+        style: {
+          backgroundColor: "rgba(0,0,0,0.6)",
+          color: "white",
+        },
+        id,
       })
-    }
-  }, [label_name.x, label_name.y])
+    : toast.dismiss(id)
+
+  useEffect(() => {
+    isPending
+      ? ""
+      : window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        })
+  }, [isPending])
+
   return (
     <div className="bar-graph-div">
       <section>

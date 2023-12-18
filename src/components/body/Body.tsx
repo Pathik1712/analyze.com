@@ -32,7 +32,14 @@ const Body = () => {
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       setFile(e.target.value)
       if (!e.target.files![0].name.includes("csv")) {
-        toast.error("please select csv file")
+        toast.error("please select csv file",{
+          style: {
+            backgroundColor: "rgba(0,0,0,0.8)",
+            color: "white",
+            textTransform:'capitalize',
+            fontSize:'1.2rem'
+          },
+        })
         setFile("")
         return
       }
@@ -42,7 +49,12 @@ const Body = () => {
         header: true,
         complete(results) {
           if (results.data.length === 0) {
-            return toast.error("file is empty")
+            return toast.error("file is empty",{
+              style: {
+                backgroundColor: "rgba(0,0,0,0.6)",
+                color: "white",
+              },
+            })
           }
           const arr = Object.keys(results.data[0]!).map((key) => key)
           setHearder(arr)
@@ -119,6 +131,7 @@ const Body = () => {
             <option value="Polar">Polar</option>
             <option value="Pie">Pie</option>
           </select>
+          {/* <input type="range" /> */}
         </>
       ) : (
         <img
