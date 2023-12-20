@@ -105,6 +105,10 @@ const LineComponent = ({ data, headerList, color }: Props) => {
     [data, dataGroup, label_name]
   )
 
+  useEffect(() => {
+    set_xLabel(data.map((i) => (i as Record<string, unknown>)[label_name.x]))
+  }, [data, label_name])
+
   isPending
     ? toast.loading("Loading...", {
         style: {

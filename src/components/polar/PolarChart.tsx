@@ -23,7 +23,7 @@ const PolarChart = ({ color, data, headerList }: Props) => {
   const [label, set_label] = useState<string[]>([])
 
   const handleLabel = useCallback(
-    (_e: React.ChangeEvent<HTMLInputElement>, item: string) => {
+    (_e: React.ChangeEvent<HTMLInputElement> | null, item: string) => {
       const obj: Record<string, number> = {}
       const early_data = data.map((i) => (i as Record<string, unknown>)[item])
       if (typeof early_data[0] !== "number") {
@@ -91,6 +91,12 @@ const PolarChart = ({ color, data, headerList }: Props) => {
       })
     }
   }, [info, selectedHeaders])
+
+  useEffect(() => {
+    if (selectedHeaders) {
+      handleLabel(null, selectedHeaders)
+    }
+  }, [data, handleLabel, selectedHeaders])
 
   return (
     <div className="bar-graph-div polar-div">

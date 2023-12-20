@@ -57,6 +57,31 @@
       cursor: pointer;
     }
   }
+  > input[type="range"] {
+    display: block;
+    margin-top: 2rem;
+    width: 10rem;
+    // &:focus{
+    //   outline: none;
+    // }
+  }
+  > span {
+    color: rgb(82, 82, 82);
+    display: block;
+    margin-top: 1rem;
+    > button {
+      cursor: pointer;
+      background-color: dodgerblue;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      &:hover {
+        background-color: darken($color: dodgerblue, $amount: 20%);
+      }
+    }
+  }
   .select-graph {
     background: #f64f59;
     border-radius: 5px;

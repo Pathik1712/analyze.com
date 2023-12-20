@@ -8,6 +8,7 @@ import LineComponent from "../line/Line"
 import PolarChart from "../polar/PolarChart"
 import PieChart from "../pie/PieComponent"
 import img from "../../assets/Empty.jpg"
+import InputRange from "./components/InputRange"
 
 type Graph = "Bar" | "Pie" | "Line" | "Polar" | ""
 
@@ -16,6 +17,7 @@ const Body = () => {
 
   const [file, setFile] = useState("")
   const [data, setData] = useState<object[]>([])
+  const [dataRange, setDataRange] = useState<object[]>([])
   const [header, setHearder] = useState<string[]>([])
   const [barType, set_barType] = useState<Graph>("")
   const [cleaning, set_cleaning] = useState(false)
@@ -32,12 +34,12 @@ const Body = () => {
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       setFile(e.target.value)
       if (!e.target.files![0].name.includes("csv")) {
-        toast.error("please select csv file",{
+        toast.error("please select csv file", {
           style: {
             backgroundColor: "rgba(0,0,0,0.8)",
             color: "white",
-            textTransform:'capitalize',
-            fontSize:'1.2rem'
+            textTransform: "capitalize",
+            fontSize: "1.2rem",
           },
         })
         setFile("")
@@ -49,7 +51,7 @@ const Body = () => {
         header: true,
         complete(results) {
           if (results.data.length === 0) {
-            return toast.error("file is empty",{
+            return toast.error("file is empty", {
               style: {
                 backgroundColor: "rgba(0,0,0,0.6)",
                 color: "white",
@@ -76,6 +78,7 @@ const Body = () => {
       })
       const arr = data.filter((i) => Object.keys(i).length === header.length)
       setData(arr)
+      setDataRange(arr as object[])
       set_cleaning(false)
       toast.dismiss(load)
     }
@@ -114,6 +117,12 @@ const Body = () => {
               <span key={`select-title-${num}`}>{i}</span>
             ))}
           </section>
+          <section
+            className="Title"
+            style={{ marginBottom: "2rem" }}
+          >
+            <h3>Bar Type</h3>
+          </section>
           <select
             className="select-graph"
             defaultValue={""}
@@ -131,7 +140,13 @@ const Body = () => {
             <option value="Polar">Polar</option>
             <option value="Pie">Pie</option>
           </select>
-          {/* <input type="range" /> */}
+          <section className="Title">
+            <h3>Data range:</h3>
+          </section>
+          <InputRange
+            data={data}
+            setDataRange={setDataRange}
+          />
         </>
       ) : (
         <img
@@ -144,25 +159,25 @@ const Body = () => {
       {barType === "Bar" ? (
         <BarComponent
           color={color}
-          data={data}
+          data={dataRange}
           headerList={header}
         />
       ) : barType === "Line" ? (
         <LineComponent
           color={color}
-          data={data}
+          data={dataRange}
           headerList={header}
         />
       ) : barType === "Polar" ? (
         <PolarChart
           color={color}
-          data={data}
+          data={dataRange}
           headerList={header}
         />
       ) : barType === "Pie" ? (
         <PieChart
           color={color}
-          data={data}
+          data={dataRange}
           headerList={header}
         />
       ) : (

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -16,7 +16,7 @@ type Props = {
 
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend)
 
-const PieChart = ({ color, data, headerList }: Props) => {
+const PieChart = React.memo(({ color, data, headerList }: Props) => {
   const [selectedHeaders, set_selectedHeaders] = useState("")
   const [info, set_info] = useState<number[]>([])
 
@@ -24,13 +24,19 @@ const PieChart = ({ color, data, headerList }: Props) => {
 
   const [yLabel, setYlabel] = useState("")
 
+  const memo_data = useMemo(() => {
+    return data
+  }, [data])
+
   const handleLabel = useCallback(
-    (_e: React.ChangeEvent<HTMLInputElement>, item: string) => {
+    (_e: React.ChangeEvent<HTMLInputElement> | null, item: string) => {
       const obj: Record<string, number> = {}
       setYlabel(item)
-      const early_data = data.map((i) => (i as Record<string, unknown>)[item])
+      const early_data = memo_data.map(
+        (i) => (i as Record<string, unknown>)[item]
+      )
       if (typeof early_data[0] !== "number") {
-        data.forEach((i) => {
+        memo_data.forEach((i) => {
           !Object.prototype.hasOwnProperty.call(
             obj,
             (i as Record<string, string | number>)[selectedHeaders]
@@ -56,7 +62,7 @@ const PieChart = ({ color, data, headerList }: Props) => {
         set_info(Object.keys(obj).map((i) => obj[i]))
         set_label(Object.keys(obj))
       } else {
-        data.forEach((i) => {
+        memo_data.forEach((i) => {
           !Object.prototype.hasOwnProperty.call(
             obj,
             (i as Record<string, string | number>)[selectedHeaders]
@@ -83,8 +89,14 @@ const PieChart = ({ color, data, headerList }: Props) => {
         set_label(Object.keys(obj))
       }
     },
-    [data, selectedHeaders]
+    [memo_data, selectedHeaders]
   )
+
+  useEffect(() => {
+    if (yLabel) {
+      handleLabel(null, yLabel)
+    }
+  }, [data, handleLabel, yLabel])
 
   useEffect(() => {
     if (selectedHeaders !== "" && info.length !== 0) {
@@ -167,6 +179,6 @@ const PieChart = ({ color, data, headerList }: Props) => {
       )}
     </div>
   )
-}
+})
 
 export default PieChart

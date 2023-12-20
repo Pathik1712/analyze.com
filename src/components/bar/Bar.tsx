@@ -54,6 +54,7 @@ const BarComponent = ({ headerList, data, color }: Props) => {
 
   const handleXlabel = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
+      console.log(data.length)
       set_labelName({
         ...label_name,
         x: e.target.value,
@@ -112,6 +113,9 @@ const BarComponent = ({ headerList, data, color }: Props) => {
           behavior: "smooth",
         })
   }, [isPending])
+  useEffect(() => {
+    set_xLabel(data.map((i) => (i as Record<string, unknown>)[label_name.x]))
+  }, [data, label_name])
 
   return (
     <div className="bar-graph-div">
