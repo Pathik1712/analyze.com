@@ -1,0 +1,204 @@
+$b-width: 2px;
+$b-gap: 5px;
+@function border-pipeline($transition_duration, $pipe) {
+  @return $transition_duration * $pipe;
+}
+
+@mixin border-animation($dimension, $pipe) {
+  transition: 100ms $dimension ease border-pipeline(100ms, $pipe);
+}
+
+.comp {
+  margin-inline: 4rem;
+  padding-bottom: 4rem;
+  > ul {
+    margin-top: 2rem;
+    border-radius: 5px;
+    background-color: #f64fc4ca;
+    padding: 1rem 2rem;
+    color: white;
+    > li {
+      padding-left: 2rem;
+      list-style-position: inside;
+      text-transform: capitalize;
+      padding-bottom: 0.4rem;
+    }
+    > h2 {
+      letter-spacing: 2px;
+      padding-bottom: 1rem;
+      text-decoration: underline #12c2e9be;
+      text-underline-offset: 7px;
+    }
+  }
+  input[type="file"] {
+    display: none;
+  }
+  input[type="file"] + label {
+    text-transform: capitalize;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 2rem;
+    border-radius: 5px;
+    background-color: dodgerblue;
+    color: white;
+    padding: 5px 10px;
+    font-weight: 600;
+  }
+  > img {
+    width: 100%;
+    max-width: 35rem;
+    display: block;
+    margin-inline: auto;
+  }
+  > section {
+    > h2 {
+      text-transform: capitalize;
+      background-color: #c471ed;
+      color: white;
+      display: block;
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-top: 2rem;
+      font-size: x-large;
+      width: fit-content;
+      @media (max-width: 550px) {
+        font-size: 4vw;
+      }
+    }
+    > select {
+      margin-top: 1rem;
+      background: #f64f59;
+      border-radius: 5px;
+      outline: none;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      font-size: large;
+      > option {
+        background-color: darkcyan;
+        border-radius: inherit;
+        border: none;
+      }
+      @media (max-width: 550px) {
+        font-size: 4vw;
+      }
+    }
+  }
+  .imgdiv {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .compbtn {
+    position: relative;
+    border: none;
+    background-color: lightseagreen;
+    color: white;
+    text-transform: capitalize;
+    padding: 5px 10px;
+    font-size: x-large;
+    margin-inline: auto;
+    display: block;
+    margin-top: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    &::before {
+      content: "";
+      position: absolute;
+      height: $b-width;
+      width: 0;
+      top: -$b-width - $b-gap;
+      left: -$b-width - $b-gap;
+      background-color: #c471ed;
+      border-radius: 5px;
+      @include border-animation(width, 4);
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      height: 0;
+      width: $b-width;
+      top: -$b-width - $b-gap;
+      right: -$b-width - $b-gap;
+      background-color: #c471ed;
+      border-radius: 5px;
+      @include border-animation(height, 3);
+    }
+
+    > div::before {
+      content: "";
+      position: absolute;
+      height: $b-width;
+      width: 0;
+      background-color: #c471ed;
+      border-radius: 5px;
+      bottom: -$b-gap - $b-width;
+      right: -$b-gap - $b-width;
+      @include border-animation(width, 2);
+    }
+    > div::after {
+      content: "";
+      position: absolute;
+      height: 0;
+      width: $b-width;
+      background-color: #c471ed;
+      border-radius: 5px;
+      bottom: -$b-gap - $b-width;
+      left: -$b-gap - $b-width;
+      @include border-animation(height, 0);
+    }
+    &:hover {
+      &::before {
+        width: 100%;
+        @include border-animation(width, 0);
+      }
+      &::after {
+        height: 100%;
+        @include border-animation(height, 1);
+      }
+      > div::before {
+        width: 100%;
+        @include border-animation(width, 2);
+      }
+      > div::after {
+        height: 100%;
+        @include border-animation(height, 3);
+      }
+    }
+  }
+}
+
+.compDiv {
+  margin-top: 2rem;
+  > img {
+    width: 100%;
+    max-width: 35rem;
+    animation: enter 0.8s forwards 1;
+    @keyframes enter {
+      from{
+        transform: scaley(0);
+        opacity: 0.3;
+      }
+      to {
+        opacity: 1;
+        transform: scaley(1);
+      }
+    }
+  }
+  > p {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    color: gray;
+    gap: 1.2rem;
+    > a {
+      > svg {
+        height: 1.8rem;
+        path {
+          fill: dodgerblue;
+        }
+      }
+    }
+  }
+}
