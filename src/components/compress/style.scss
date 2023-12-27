@@ -88,6 +88,7 @@ $b-gap: 5px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    gap: 2rem;
   }
   .compbtn {
     position: relative;
@@ -172,6 +173,8 @@ $b-gap: 5px;
 .compDiv {
   margin-top: 2rem;
   > img {
+    border-radius: 10px;
+    box-shadow: 0 0 15px black;
     width: 100%;
     max-width: 35rem;
     animation: enter 0.8s forwards 1;
